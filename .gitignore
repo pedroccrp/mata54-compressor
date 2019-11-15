@@ -1,0 +1,10 @@
+# Ignore the build and lib dirs
+build/*
+lib/*
+tests/*
+
+# Ignore any executables
+bin/*
+
+#Ignore VsCode's settings
+.vscode/*
