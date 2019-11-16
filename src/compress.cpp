@@ -34,8 +34,8 @@ void openCompressedFile(std::string compressedFileName)
 void createNumberOfBitsHeader()
 {
     uint numberOfBits = countNumberOfBits();
-
-    compressedFile << numberOfBits;
+    
+    compressedFile.write((char*)&numberOfBits, sizeof(uint));
 }
 
 void createTableHeader()
@@ -99,7 +99,7 @@ void createCompressedFile(std::string fileName)
     openCompressedFile(compressedFileName);
 
     createNumberOfBitsHeader();
-    createCodedString();
+    // createCodedString();
     createTableHeader();
     
     closeCompressedFile();
