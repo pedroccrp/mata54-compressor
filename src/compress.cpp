@@ -1,6 +1,8 @@
 #include "compress.h"
 
+#include <string>
 #include <iostream>
+#include <fstream>
 
 #include "filedata.h"
 #include "huffman.h"
@@ -17,4 +19,13 @@ void compress(std::string fileName)
     createTable();
 
     fd.close();
+
+    createCompressedFile(fileName);
+}
+
+void createCompressedFile(std::string fileName)
+{
+    fileName += ".cmp";
+
+    std::cout << "Writting compressed file...\n";
 }

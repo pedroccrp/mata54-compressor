@@ -73,6 +73,8 @@ void createTable()
 {
     Node root;
 
+    std::cout << "Creating table...\n";
+
     createTree();
     createQueue(root);
     
@@ -83,10 +85,5 @@ void createTable()
     else
     {
         fillTable(root, "");
-    }
-
-    for (auto x : gCodingTable)
-    {
-        std::cout << x.first << " " << x.second << "\n";
     }
 }
