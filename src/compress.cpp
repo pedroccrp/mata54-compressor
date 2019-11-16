@@ -40,7 +40,26 @@ void createNumberOfBitsHeader()
 
 void createTableHeader()
 {
-    // Write table to file    
+    std::bitset<8> encoding;
+    std::string bits;
+
+    for (auto tableUnit : gCodingTable)
+    {
+        compressedFile.write(&tableUnit.first, sizeof(char));
+
+        bits = "";
+
+        for (uint i = 0; i < (8 - tableUnit.second.length()); ++i)
+        {
+            bits += "0";
+        }
+
+        bits += tableUnit.second;
+
+        encoding = std::bitset<8>(bits);
+        
+        compressedFile << encoding.to_ulong();
+    }    
 }
 
 void closeCompressedFile()
@@ -99,7 +118,7 @@ void createCompressedFile(std::string fileName)
     openCompressedFile(compressedFileName);
 
     createNumberOfBitsHeader();
-    // createCodedString();
+    createCodedString();
     createTableHeader();
     
     closeCompressedFile();
