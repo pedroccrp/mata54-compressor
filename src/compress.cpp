@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "filedata.h"
+#include "huffman.h"
 
 static FileData fd;
 
@@ -12,7 +13,8 @@ void compress(std::string fileName)
     
     fd.open(fileName);
 
-    // To do
+    countCharacters(fd);
+    createTable();
 
     fd.close();
 }

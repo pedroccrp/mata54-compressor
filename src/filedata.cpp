@@ -50,6 +50,13 @@ bool FileData::_readToBuffer()
     return true;
 }
 
+void FileData::reset()
+{
+    fseek(_fp, 0, SEEK_SET);
+    
+    _fileRemainSize = _bufferRemainSize = 0;
+}
+
 char FileData::getNextByte()
 {
     if (_bufferRemainSize == 0)

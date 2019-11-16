@@ -25,6 +25,7 @@ public:
 
     void open(std::string);
     bool isFinished();
+    void reset();
     char getNextByte();
     void close();
 };
