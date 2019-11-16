@@ -31,12 +31,15 @@ void openCompressedFile(std::string compressedFileName)
     compressedFile = std::ofstream(compressedFileName);
 }
 
-void createCompressedFileHeader()
+void createNumberOfBitsHeader()
 {
     uint numberOfBits = countNumberOfBits();
 
     compressedFile << numberOfBits;
+}
 
+void createTableHeader()
+{
     // Write table to file    
 }
 
@@ -95,8 +98,9 @@ void createCompressedFile(std::string fileName)
 
     openCompressedFile(compressedFileName);
 
-    createCompressedFileHeader();
+    createNumberOfBitsHeader();
     createCodedString();
-
+    createTableHeader();
+    
     closeCompressedFile();
 }

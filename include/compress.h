@@ -10,7 +10,8 @@ extern std::string codedString;
 void compress(std::string);
 
 void openCompressedFile(std::string);
-void createCompressedFileHeader();
+void createNumberOfBitsHeader();
+void createTableHeader();
 void closeCompressedFile();
 
 void writeBits(std::string);
