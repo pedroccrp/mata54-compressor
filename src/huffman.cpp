@@ -19,6 +19,18 @@ void countCharacters(FileData fd)
     }    
 }
 
+uint countNumberOfBits()
+{
+    uint numberOfBits = 0;
+
+    for (auto charRate : gCharRates)
+    {
+        numberOfBits += charRate.second * gCodingTable[charRate.first].length(); 
+    }
+
+    return numberOfBits;
+}
+
 void createTree()
 {
     for (auto charRate : gCharRates)

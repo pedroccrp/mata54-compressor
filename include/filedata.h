@@ -13,6 +13,7 @@ private:
 
     int _bufferSize = 0;
     int _bufferRemainSize = 0;
+    int _fileSize = 0;
     int _fileRemainSize = 0;
 
     char _buffer[MAX_BUFFER_SIZE];

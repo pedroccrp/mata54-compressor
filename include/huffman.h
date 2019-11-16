@@ -15,6 +15,8 @@ extern std::map<char, std::string> gCodingTable;
 extern HuffmanQueue huffmanQueue;
 
 void countCharacters(FileData);
+uint countNumberOfBits();
+
 void createTree();
 void createQueue(Node&);
 void createTable();

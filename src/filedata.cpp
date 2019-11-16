@@ -24,7 +24,7 @@ void FileData::open(std::string fileName)
     }
 
     fseek(_fp, 0, SEEK_END);
-    _fileRemainSize = ftell(_fp);
+    _fileSize = _fileRemainSize = ftell(_fp);
     fseek(_fp, 0, SEEK_SET);
 }
 
@@ -54,7 +54,8 @@ void FileData::reset()
 {
     fseek(_fp, 0, SEEK_SET);
     
-    _fileRemainSize = _bufferRemainSize = 0;
+    _fileRemainSize = _fileSize;
+    _bufferRemainSize = 0;
 }
 
 char FileData::getNextByte()
