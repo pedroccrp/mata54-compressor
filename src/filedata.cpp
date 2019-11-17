@@ -50,12 +50,37 @@ bool FileData::_readToBuffer()
     return true;
 }
 
+void FileData::readAmount(void* whereToWrite, uint size, uint amount)
+{
+    try
+    {        
+        fread(whereToWrite, size, amount, _fp);
+        _fileRemainSize -= size * amount;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error reading file! " << e.what() << '\n';
+    }
+}
+
+void FileData::seek(uint amount)
+{
+    fseek(_fp, amount, SEEK_CUR);
+
+    _fileRemainSize -= amount;
+}
+
 void FileData::reset()
 {
     fseek(_fp, 0, SEEK_SET);
     
     _fileRemainSize = _fileSize;
     _bufferRemainSize = 0;
+}
+
+void FileData::setFileSize(int size)
+{
+    _fileRemainSize = _fileSize = size;
 }
 
 char FileData::getNextByte()
@@ -81,7 +106,7 @@ char FileData::getNextByte()
 
 bool FileData::isFinished()
 {
-    return (_fileRemainSize == 0);
+    return (_fileRemainSize <= 0);
 }
 
 void FileData::close()

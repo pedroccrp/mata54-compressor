@@ -5,13 +5,13 @@
 #include <bitset>
 #include <fstream>
 
+#include <math.h>
+
 #include "filedata.h"
 #include "huffman.h"
 
 static FileData fd;
 static std::ofstream compressedFile;
-
-std::string codedString;
 
 void compress(std::string fileName)
 {
@@ -31,35 +31,78 @@ void openCompressedFile(std::string compressedFileName)
     compressedFile = std::ofstream(compressedFileName);
 }
 
-void createNumberOfBitsHeader()
+void createTableSizeHeader()
 {
-    uint numberOfBits = countNumberOfBits();
-    
-    compressedFile.write((char*)&numberOfBits, sizeof(uint));
+    uint tableSize = gCodingTable.size();
+
+    compressedFile.write((char*)&tableSize, sizeof(uint));
 }
 
 void createTableHeader()
 {
+    char encodingSize;
+    char encodingChar;
+
+    uint bytes;
+    uint remainingNumOfBits;
+
+    std::string encodingPiece;
+    std::string encodingCopy;
+
     std::bitset<8> encoding;
-    std::string bits;
 
     for (auto tableUnit : gCodingTable)
     {
         compressedFile.write(&tableUnit.first, sizeof(char));
 
-        bits = "";
+        encodingSize = tableUnit.second.length();
+        compressedFile.write(&encodingSize, sizeof(char));
+        
+        bytes = std::ceil(encodingSize / 8.0);
 
-        for (uint i = 0; i < (8 - tableUnit.second.length()); ++i)
+        encodingCopy = tableUnit.second;
+        
+        std::string zeros = "";
+
+        for (uint i = 0; i < (bytes * 8) - (uint)encodingSize; i++)
         {
-            bits += "0";
+            zeros += "0";
         }
 
-        bits += tableUnit.second;
+        encodingCopy = zeros + encodingCopy;
 
-        encoding = std::bitset<8>(bits);
-        
-        compressedFile << encoding.to_ulong();
+        std::cout << tableUnit.first << " " << (int)encodingSize << " ";
+
+        for (uint i = 0; i < bytes; i++)
+        {
+            remainingNumOfBits = std::min((uint)8, (uint)encodingCopy.size());
+            encodingPiece = encodingCopy.substr(0, remainingNumOfBits);
+            
+            std::cout << encodingPiece;
+
+            encodingCopy.erase(0, remainingNumOfBits);
+            
+            encoding = std::bitset<8>(encodingPiece);
+
+            encodingChar = encoding.to_ulong();
+
+            compressedFile.write(&encodingChar, sizeof(char));
+        }   
+
+        std::cout << "\n";
     }    
+}
+
+void createNumBitsHeader()
+{
+    uint numOfBits = 0;
+
+    for (auto charRate : gCharRates)
+    {
+        numOfBits += charRate.second * gCodingTable[charRate.first].size();
+    }
+
+    compressedFile.write((char*)&numOfBits, sizeof(uint));
 }
 
 void closeCompressedFile()
@@ -71,40 +114,42 @@ void writeBits(std::string bitString)
 {
     char byteToWrite;
 
-    std::bitset<8> bitsToWrite;
+    std::bitset<8> bitsToWrite(bitString);
 
-    while (!bitString.empty())
-    {
-        bitsToWrite = std::bitset<8>(bitString.substr(0, 8));
-        
-        byteToWrite = bitsToWrite.to_ulong();
-
-        compressedFile << byteToWrite;
-
-        bitString.erase(0, 8);
-    }
+    byteToWrite = bitsToWrite.to_ulong();
+    
+    compressedFile.write(&byteToWrite, sizeof(char));
 }
 
 void createCodedString()
 {
-    codedString = "";
+    std::string codedString = "";
+    std::string codedChar = "";
   
     fd.reset();
 
     while (!fd.isFinished())
     {
-        codedString += gCodingTable[fd.getNextByte()];
+        codedChar = gCodingTable[fd.getNextByte()];
+        codedString += codedChar;
 
-        while (codedString.length() >= BITS_TO_WRITE)
+        while (codedString.length() >= 8)
         {
-            writeBits(codedString.substr(0, BITS_TO_WRITE));
+            writeBits(codedString.substr(0, 8));
 
-            codedString.erase(0, BITS_TO_WRITE);
+            codedString.erase(0, 8);
         }
     }
 
     if (codedString.length() > 0)
     {
+        uint size = codedString.size();
+
+        for (uint i = 0; i < 8 - size; ++i)
+        {
+            codedString += "0";
+        }
+        
         writeBits(codedString);
     }
 }
@@ -113,13 +158,18 @@ void createCompressedFile(std::string fileName)
 {
     std::string compressedFileName = fileName + ".cmp";
 
-    std::cout << "Writting compressed file...\n";
 
     openCompressedFile(compressedFileName);
 
-    createNumberOfBitsHeader();
-    createCodedString();
+    std::cout << "Writting header to file...\n";
+
+    createTableSizeHeader();
     createTableHeader();
+    createNumBitsHeader();
+    
+    std::cout << "Writting encoding to file...\n";
+    
+    createCodedString();
     
     closeCompressedFile();
 }

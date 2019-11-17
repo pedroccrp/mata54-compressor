@@ -25,8 +25,15 @@ public:
     ~FileData();
 
     void open(std::string);
-    bool isFinished();
-    void reset();
-    char getNextByte();
     void close();
+
+    char getNextByte();
+    bool isFinished();
+    
+    void setFileSize(int);
+    void reset();
+    
+    void readAmount(void*, uint, uint);
+    void seek(uint);
+    
 };

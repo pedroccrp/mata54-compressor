@@ -2,17 +2,23 @@
 
 #include <iostream>
 #include <map>
+#include <bitset>
 #include <queue>
+
+#include <math.h>
 
 #include "filedata.h"
 
 std::map<char, int> gCharRates;
 std::map<char, std::string> gCodingTable;
+std::map<std::string, char> gDecodingTable;
 
 HuffmanQueue huffmanQueue;
 
 void countCharacters(FileData fd)
 {
+    std::cout << "Counting characters...\n";
+
     while (!fd.isFinished())
     {
         gCharRates[fd.getNextByte()]++;
@@ -97,5 +103,42 @@ void createTable()
     else
     {
         fillTable(root, "");
+    }
+}
+
+void mountTable(FileData& fd)
+{
+    uint tableSize = 0;
+    
+    char id;
+    uint encodeSize;
+    uint encodeBytes;
+    
+    std::string encode;
+    std::string parsedEncode;
+
+    fd.readAmount(&tableSize, sizeof(uint), 1);
+
+    std::cout << "Retrieving table from file...\n";
+
+    for (uint i = 0; i < tableSize; i++)
+    {
+        id = fd.getNextByte();
+
+        encodeSize = fd.getNextByte();
+        encodeBytes = std::ceil(encodeSize / 8.0);
+        
+        encode = "";
+
+        for (uint i = 0; i < encodeBytes; i++)
+        {
+            encode += std::bitset<8>(fd.getNextByte()).to_string();
+        }
+
+        std::cout << id << " " << encodeSize << " " << encode << "\n";
+
+        parsedEncode = encode.substr((encodeBytes * 8) - encodeSize, encodeSize);
+        
+        gDecodingTable[parsedEncode] = id;
     }
 }
