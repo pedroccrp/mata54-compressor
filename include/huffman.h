@@ -9,14 +9,14 @@
 
 typedef std::priority_queue<Node, std::vector<Node>, std::greater<Node>> HuffmanQueue;
 
-extern std::map<char, int> gCharRates;
+extern std::map<char, ulong> gCharRates;
 extern std::map<char, std::string> gCodingTable;
 extern std::map<std::string, char> gDecodingTable;
 
 extern HuffmanQueue huffmanQueue;
 
 void countCharacters(FileData);
-uint countNumberOfBits();
+ulong countNumberOfBits();
 
 void createTree();
 void createQueue(Node&);

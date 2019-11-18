@@ -9,7 +9,7 @@
 
 #include "filedata.h"
 
-std::map<char, int> gCharRates;
+std::map<char, ulong> gCharRates;
 std::map<char, std::string> gCodingTable;
 std::map<std::string, char> gDecodingTable;
 
@@ -17,17 +17,15 @@ HuffmanQueue huffmanQueue;
 
 void countCharacters(FileData fd)
 {
-    std::cout << "Counting characters...\n";
-
     while (!fd.isFinished())
     {
         gCharRates[fd.getNextByte()]++;
     }    
 }
 
-uint countNumberOfBits()
+ulong countNumberOfBits()
 {
-    uint numberOfBits = 0;
+    ulong numberOfBits = 0;
 
     for (auto charRate : gCharRates)
     {
@@ -91,8 +89,6 @@ void createTable()
 {
     Node root;
 
-    std::cout << "Creating table...\n";
-
     createTree();
     createQueue(root);
     
@@ -119,8 +115,6 @@ void mountTable(FileData& fd)
 
     fd.readAmount(&tableSize, sizeof(uint), 1);
 
-    std::cout << "Retrieving table from file...\n";
-
     for (uint i = 0; i < tableSize; i++)
     {
         id = fd.getNextByte();
@@ -134,8 +128,6 @@ void mountTable(FileData& fd)
         {
             encode += std::bitset<8>(fd.getNextByte()).to_string();
         }
-
-        std::cout << id << " " << encodeSize << " " << encode << "\n";
 
         parsedEncode = encode.substr((encodeBytes * 8) - encodeSize, encodeSize);
         

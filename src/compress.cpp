@@ -14,9 +14,7 @@ static FileData fd;
 static std::ofstream compressedFile;
 
 void compress(std::string fileName)
-{
-    std::cout << "Compressing...\n";
-    
+{    
     fd.open(fileName);
 
     countCharacters(fd);
@@ -71,14 +69,10 @@ void createTableHeader()
 
         encodingCopy = zeros + encodingCopy;
 
-        std::cout << tableUnit.first << " " << (int)encodingSize << " ";
-
         for (uint i = 0; i < bytes; i++)
         {
             remainingNumOfBits = std::min((uint)8, (uint)encodingCopy.size());
             encodingPiece = encodingCopy.substr(0, remainingNumOfBits);
-            
-            std::cout << encodingPiece;
 
             encodingCopy.erase(0, remainingNumOfBits);
             
@@ -88,21 +82,14 @@ void createTableHeader()
 
             compressedFile.write(&encodingChar, sizeof(char));
         }   
-
-        std::cout << "\n";
     }    
 }
 
 void createNumBitsHeader()
 {
-    uint numOfBits = 0;
+    ulong numOfBits = countNumberOfBits();
 
-    for (auto charRate : gCharRates)
-    {
-        numOfBits += charRate.second * gCodingTable[charRate.first].size();
-    }
-
-    compressedFile.write((char*)&numOfBits, sizeof(uint));
+    compressedFile.write((char*)&numOfBits, sizeof(ulong));
 }
 
 void closeCompressedFile()
@@ -158,17 +145,12 @@ void createCompressedFile(std::string fileName)
 {
     std::string compressedFileName = fileName + ".cmp";
 
-
     openCompressedFile(compressedFileName);
-
-    std::cout << "Writting header to file...\n";
 
     createTableSizeHeader();
     createTableHeader();
     createNumBitsHeader();
-    
-    std::cout << "Writting encoding to file...\n";
-    
+        
     createCodedString();
     
     closeCompressedFile();

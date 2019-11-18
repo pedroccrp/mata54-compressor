@@ -11,10 +11,10 @@ class FileData
 private:
     FILE* _fp = nullptr;
 
-    int _bufferSize = 0;
-    int _bufferRemainSize = 0;
-    int _fileSize = 0;
-    int _fileRemainSize = 0;
+    ulong _bufferSize = 0;
+    ulong _bufferRemainSize = 0;
+    ulong _fileSize = 0;
+    ulong _fileRemainSize = 0;
 
     char _buffer[MAX_BUFFER_SIZE];
 
@@ -30,6 +30,8 @@ public:
     char getNextByte();
     bool isFinished();
     
+    ulong getFileRemainSize();
+    ulong getFileSize();
     void setFileSize(int);
     void reset();
     

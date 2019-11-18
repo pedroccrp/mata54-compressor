@@ -13,14 +13,12 @@ static std::ofstream decompressedFile;
 
 void decompress(std::string fileName)
 {
-    std::cout << "Decompressing...\n";
-
     fd.open(fileName);
 
     mountTable(fd);
 
-    // createDecompressedFile(fileName.substr(0, fileName.size() - 4));
-    createDecompressedFile(fileName + ".dec");
+    createDecompressedFile(fileName.substr(0, fileName.size() - 4));
+    // createDecompressedFile(fileName + ".dec");
 
     fd.close();
 }
@@ -37,17 +35,15 @@ void closeDecompressedFile()
 
 void createDecompressedFile(std::string decompressedFileName)
 {
-    uint numOfBits = 0;
+    ulong numOfBits = 0;
 
     std::string encode = "";
     
     std::string bits;
 
-    fd.readAmount(&numOfBits, sizeof(uint), 1);
+    fd.readAmount(&numOfBits, sizeof(ulong), 1);
 
     openDecompressedFile(decompressedFileName);
-
-    std::cout << "Writting decoded string to file...\n";
 
     while (!fd.isFinished() && numOfBits > 0)
     {

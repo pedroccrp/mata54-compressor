@@ -31,7 +31,7 @@ void FileData::open(std::string fileName)
 
 bool FileData::_readToBuffer()
 {
-    int amount = std::min(MAX_BUFFER_SIZE, _fileRemainSize);
+    int amount = std::min((ulong)MAX_BUFFER_SIZE, _fileRemainSize);
 
     if (amount == 0)
     {
@@ -76,6 +76,16 @@ void FileData::reset()
     
     _fileRemainSize = _fileSize;
     _bufferRemainSize = 0;
+}
+
+ulong FileData::getFileRemainSize()
+{
+    return _fileRemainSize;
+}
+
+ulong FileData::getFileSize()
+{
+    return _fileSize;
 }
 
 void FileData::setFileSize(int size)
