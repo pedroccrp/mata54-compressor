@@ -88,9 +88,9 @@ Contributions are what make the open source community such an amazing place to b
 
 ### Contributors
 
-* Pedro Pontes - [pedroccrp](https://github.com/pedroccrp)
+* Antônio Dias - [antoniofdias](https://github.com/antoniofdias)
 * Eduardo Seifert - [EduardoRSeifert](https://github.com/EduardoRSeifert)
-* Antônio Dias - [EduardoRSeifert](https://github.com/antoniofdias)
+* Pedro Pontes - [pedroccrp](https://github.com/pedroccrp)
 
 See [contributors](https://github.com/pedroccrp/mata54-compressor/graphs/contributors) page for more info.
 
