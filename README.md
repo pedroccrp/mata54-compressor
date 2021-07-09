@@ -17,7 +17,7 @@
 
 ## About The Project
 
-A simple file compressor made as a work for Data Structures class
+A simple file compressor made as a work for Data Structures class.
 
 ### Built With
 
